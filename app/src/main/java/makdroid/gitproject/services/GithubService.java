@@ -1,5 +1,6 @@
 package makdroid.gitproject.services;
 
+import makdroid.gitproject.model.GitHubResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -10,5 +11,8 @@ import retrofit2.http.Query;
 public interface GithubService {
 
     @GET("search/repositories")
-    Call<Object> getRepoByName(@Query("q") String q);
+    Call<GitHubResponse> getReposByName(@Query("q") String q);
+
+    @GET("search/users")
+    Call<GitHubResponse> getUsersByName(@Query("q") String q);
 }
