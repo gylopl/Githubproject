@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     void initEditTextSearch() {
         mEditTextSearch.addTextChangedListener(searchWatcher);
     }
-
 
     private final TextWatcher searchWatcher = new TextWatcher() {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
