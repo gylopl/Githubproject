@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -139,9 +140,12 @@ public class MainActivity extends AppCompatActivity {
         Log.v("checkReponseCounts", "checkReponseCounts " + mResponseCounts);
         if (mResponseCounts == 2) {
             mResponseCounts = 0;
-            adapter.clearItems();
-            adapter.addItems(mItemListResponse);
-            mItemListResponse.clear();
+            if (mItemListResponse.size() > 0) {
+                Collections.sort(mItemListResponse);
+                adapter.clearItems();
+                adapter.addItems(mItemListResponse);
+                mItemListResponse.clear();
+            }
         }
     }
 
