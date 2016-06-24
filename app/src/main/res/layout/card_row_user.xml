@@ -6,6 +6,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
+    card_view:cardBackgroundColor="#607D8B"
     card_view:cardCornerRadius="5dp">
 
     <RelativeLayout
@@ -15,21 +16,29 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/user_name_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="@string/header_user"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_below="@id/user_name"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/user_name"
+            android:layout_below="@+id/user_name_header"
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>

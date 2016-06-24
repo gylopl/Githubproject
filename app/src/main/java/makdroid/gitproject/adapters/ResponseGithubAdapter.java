@@ -1,12 +1,15 @@
 package makdroid.gitproject.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import makdroid.gitproject.R;
 import makdroid.gitproject.model.Item;
@@ -19,7 +22,6 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
 
     public static final int USER = 0;
     public static final int REPO = 1;
-
 
     public ResponseGithubAdapter(List<Item> itemCollection) {
         this.mItemCollection = itemCollection;
@@ -42,7 +44,14 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
+        Item item = mItemCollection.get(position);
+        if (holder.getItemViewType() == USER) {
+            UserViewHolder viewHolder = (UserViewHolder) holder;
+            viewHolder.userName.setText(item.login);
+        } else {
+            RepoHolder viewHolder = (RepoHolder) holder;
+            viewHolder.repoName.setText(item.name);
+        }
     }
 
     @Override
@@ -52,10 +61,13 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
 
     @Override
     public int getItemViewType(int position) {
-
+        int viewType;
         Item item = mItemCollection.get(position);
-
-        return USER;
+        if (TextUtils.isEmpty(item.name))
+            viewType = USER;
+        else
+            viewType = REPO;
+        return viewType;
     }
 
 
@@ -66,6 +78,8 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
     }
 
     final class UserViewHolder extends ViewHolder {
+        @Bind(R.id.user_name)
+        TextView userName;
 
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -74,11 +88,26 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
     }
 
     final class RepoHolder extends ViewHolder {
+        @Bind(R.id.repo_name)
+        TextView repoName;
 
         public RepoHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void clearItems() {
+        int size = this.mItemCollection.size();
+        if (size > 0) {
+            this.mItemCollection.clear();
+            this.notifyItemRangeRemoved(0, size);
+        }
+    }
+
+    public void addItems(List<Item> items) {
+        this.mItemCollection.addAll(items);
+        this.notifyItemRangeInserted(0, items.size());
     }
 
 }
