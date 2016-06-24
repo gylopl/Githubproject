@@ -54,7 +54,7 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
         if (holder.getItemViewType() == USER) {
             UserViewHolder viewHolder = (UserViewHolder) holder;
             viewHolder.userName.setText(item.login);
-            Picasso.with(mContext).load(item.avatarUrl).into(viewHolder.userAvatar);
+            Picasso.with(mContext).load(item.avatarUrl).resize(50,50).into(viewHolder.userAvatar);
         } else {
             RepoHolder viewHolder = (RepoHolder) holder;
             viewHolder.repoName.setText(item.name);
