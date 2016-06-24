@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         List<Item> mItemList = new ArrayList<>();
-        adapter = new ResponseGithubAdapter(mItemList);
+        adapter = new ResponseGithubAdapter(mItemList, getApplicationContext());
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -101,39 +102,43 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void requestJSON(String query) {
-        Call<GitHubResponse> getRepos = githubService.getReposByName(query);
-        getRepos.enqueue(new Callback<GitHubResponse>() {
-            @Override
-            public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
-                GitHubResponse jsonResponse = response.body();
-                mItemListResponse.addAll(jsonResponse.items);
-                mResponseCounts++;
-                Log.v("success Repo", response.message());
-                checkReponseCounts();
-            }
+        if (TextUtils.isEmpty(query)) {
+            adapter.clearItems();
+        } else {
+            Call<GitHubResponse> getRepos = githubService.getReposByName(query);
+            getRepos.enqueue(new Callback<GitHubResponse>() {
+                @Override
+                public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
+                    GitHubResponse jsonResponse = response.body();
+                    mItemListResponse.addAll(jsonResponse.items);
+                    mResponseCounts++;
+                    Log.v("success Repo", response.message());
+                    checkReponseCounts();
+                }
 
-            @Override
-            public void onFailure(Call<GitHubResponse> call, Throwable t) {
-                Log.v("Error", t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<GitHubResponse> call, Throwable t) {
+                    Log.v("Error", t.getMessage());
+                }
+            });
 
-        Call<GitHubResponse> getUsers = githubService.getUsersByName(query);
-        getUsers.enqueue(new Callback<GitHubResponse>() {
-            @Override
-            public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
-                GitHubResponse jsonResponse = response.body();
-                mItemListResponse.addAll(jsonResponse.items);
-                mResponseCounts++;
-                Log.v("success User", response.message());
-                checkReponseCounts();
-            }
+            Call<GitHubResponse> getUsers = githubService.getUsersByName(query);
+            getUsers.enqueue(new Callback<GitHubResponse>() {
+                @Override
+                public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
+                    GitHubResponse jsonResponse = response.body();
+                    mItemListResponse.addAll(jsonResponse.items);
+                    mResponseCounts++;
+                    Log.v("success User", response.message());
+                    checkReponseCounts();
+                }
 
-            @Override
-            public void onFailure(Call<GitHubResponse> call, Throwable t) {
-                Log.v("Error", t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<GitHubResponse> call, Throwable t) {
+                    Log.v("Error", t.getMessage());
+                }
+            });
+        }
     }
 
     private void checkReponseCounts() {

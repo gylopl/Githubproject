@@ -1,11 +1,15 @@
 package makdroid.gitproject.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,12 +23,14 @@ import makdroid.gitproject.model.Item;
  */
 public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAdapter.ViewHolder> {
     private List<Item> mItemCollection;
+    private Context mContext;
 
     public static final int USER = 0;
     public static final int REPO = 1;
 
-    public ResponseGithubAdapter(List<Item> itemCollection) {
+    public ResponseGithubAdapter(List<Item> itemCollection, Context context) {
         this.mItemCollection = itemCollection;
+        this.mContext = context;
     }
 
     @Override
@@ -48,9 +54,12 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
         if (holder.getItemViewType() == USER) {
             UserViewHolder viewHolder = (UserViewHolder) holder;
             viewHolder.userName.setText(item.login);
+            Picasso.with(mContext).load(item.avatarUrl).into(viewHolder.userAvatar);
         } else {
             RepoHolder viewHolder = (RepoHolder) holder;
             viewHolder.repoName.setText(item.name);
+            if (!TextUtils.isEmpty(item.description))
+                viewHolder.repoDescription.setText(item.description);
         }
     }
 
@@ -80,6 +89,8 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
     final class UserViewHolder extends ViewHolder {
         @Bind(R.id.user_name)
         TextView userName;
+        @Bind(R.id.user_avatar)
+        ImageView userAvatar;
 
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -90,6 +101,8 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
     final class RepoHolder extends ViewHolder {
         @Bind(R.id.repo_name)
         TextView repoName;
+        @Bind(R.id.repo_description)
+        TextView repoDescription;
 
         public RepoHolder(View itemView) {
             super(itemView);
