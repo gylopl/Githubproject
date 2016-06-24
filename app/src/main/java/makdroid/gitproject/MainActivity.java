@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        List<Item> mItemList = new ArrayList<>();
-        adapter = new ResponseGithubAdapter(mItemList, getApplicationContext());
+        adapter = new ResponseGithubAdapter(new ArrayList<Item>(), getApplicationContext());
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -114,11 +113,8 @@ public class MainActivity extends AppCompatActivity {
             getRepos.enqueue(new Callback<GitHubResponse>() {
                 @Override
                 public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
-                    GitHubResponse jsonResponse = response.body();
-                    mItemListResponse.addAll(jsonResponse.items);
-                    mResponseCounts++;
+                    onResponseGitHub(response);
                     Log.v("success Repo", response.message());
-                    checkReponseCounts();
                 }
 
                 @Override
@@ -131,11 +127,8 @@ public class MainActivity extends AppCompatActivity {
             getUsers.enqueue(new Callback<GitHubResponse>() {
                 @Override
                 public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
-                    GitHubResponse jsonResponse = response.body();
-                    mItemListResponse.addAll(jsonResponse.items);
-                    mResponseCounts++;
+                    onResponseGitHub(response);
                     Log.v("success User", response.message());
-                    checkReponseCounts();
                 }
 
                 @Override
@@ -144,6 +137,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void onResponseGitHub(Response<GitHubResponse> response) {
+        GitHubResponse jsonResponse = response.body();
+        if (jsonResponse != null && jsonResponse.items != null)
+            mItemListResponse.addAll(jsonResponse.items);
+        mResponseCounts++;
+        checkReponseCounts();
     }
 
     private void checkReponseCounts() {

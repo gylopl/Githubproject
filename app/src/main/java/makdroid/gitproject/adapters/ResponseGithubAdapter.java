@@ -72,7 +72,7 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
     public int getItemViewType(int position) {
         int viewType;
         Item item = mItemCollection.get(position);
-        if (TextUtils.isEmpty(item.name))
+        if (TextUtils.isEmpty(item.name))//jezeli nazwa repo pusta
             viewType = USER;
         else
             viewType = REPO;

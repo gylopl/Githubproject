@@ -13,15 +13,9 @@ public class Item implements Comparable<Item> {
     public String login;
     @SerializedName("avatar_url")
     public String avatarUrl;
-    @SerializedName("type")
-    public String type;
-    @SerializedName("score")
-    public float score;
 
     @SerializedName("name")
     public String name;
-    @SerializedName("full_name")
-    public String fullName;
     @SerializedName("description")
     public String description;
 
