@@ -23,4 +23,9 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:layout_below="@+id/editTextSearch" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        style="@style/AppTheme.ProgressBar"
+        android:visibility="gone" />
 </RelativeLayout>

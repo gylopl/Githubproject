@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     EditText mEditTextSearch;
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @Bind(R.id.pb_loading)
+    ProgressBar mPbarLoading;
 
     private int mResponseCounts = 0;
     private ResponseGithubAdapter adapter;
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(query)) {
             adapter.clearItems();
         } else {
+            showProgressBar();
             Call<GitHubResponse> getRepos = githubService.getReposByName(query);
             getRepos.enqueue(new Callback<GitHubResponse>() {
                 @Override
@@ -151,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.addItems(mItemListResponse);
                 mItemListResponse.clear();
             }
+            hideProgressBar();
         }
     }
 
@@ -163,5 +169,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void showProgressBar() {
+        this.mPbarLoading.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        this.mPbarLoading.setVisibility(View.GONE);
+    }
 
 }
