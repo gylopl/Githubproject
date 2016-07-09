@@ -1,8 +1,6 @@
 package makdroid.gitproject.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +15,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import makdroid.gitproject.R;
 import makdroid.gitproject.model.Item;
+import makdroid.gitproject.model.Repo;
+import makdroid.gitproject.model.User;
 
 /**
  * Created by Grzecho on 23.06.2016.
  */
 public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAdapter.ViewHolder> {
     private List<Item> mItemCollection;
-    private Context mContext;
 
     public static final int USER = 0;
     public static final int REPO = 1;
 
-    public ResponseGithubAdapter(List<Item> itemCollection, Context context) {
+    public ResponseGithubAdapter(List<Item> itemCollection) {
         this.mItemCollection = itemCollection;
-        this.mContext = context;
     }
 
     @Override
@@ -50,16 +48,16 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Item item = mItemCollection.get(position);
         if (holder.getItemViewType() == USER) {
             UserViewHolder viewHolder = (UserViewHolder) holder;
-            viewHolder.userName.setText(item.login);
-            Picasso.with(mContext).load(item.avatarUrl).resize(50,50).into(viewHolder.userAvatar);
+            User user = (User) mItemCollection.get(position);
+            viewHolder.userName.setText(user.login);
+            Picasso.with(viewHolder.userName.getContext()).load(user.avatarUrl).resize(50, 50).into(viewHolder.userAvatar);
         } else {
             RepoHolder viewHolder = (RepoHolder) holder;
-            viewHolder.repoName.setText(item.name);
-            if (!TextUtils.isEmpty(item.description))
-                viewHolder.repoDescription.setText(item.description);
+            Repo repo = (Repo) mItemCollection.get(position);
+            viewHolder.repoName.setText(repo.name);
+            viewHolder.repoDescription.setText(repo.description);
         }
     }
 
@@ -72,7 +70,7 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
     public int getItemViewType(int position) {
         int viewType;
         Item item = mItemCollection.get(position);
-        if (TextUtils.isEmpty(item.name))//jezeli nazwa repo pusta
+        if (item instanceof User)
             viewType = USER;
         else
             viewType = REPO;
@@ -118,7 +116,7 @@ public class ResponseGithubAdapter extends RecyclerView.Adapter<ResponseGithubAd
         }
     }
 
-    public void addItems(List<Item> items) {
+    public void addItems(List<? extends Item> items) {
         this.mItemCollection.addAll(items);
         this.notifyItemRangeInserted(0, items.size());
     }

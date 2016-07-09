@@ -9,15 +9,6 @@ public class Item implements Comparable<Item> {
 
     @SerializedName("id")
     public int id;
-    @SerializedName("login")
-    public String login;
-    @SerializedName("avatar_url")
-    public String avatarUrl;
-
-    @SerializedName("name")
-    public String name;
-    @SerializedName("description")
-    public String description;
 
     @Override
     public int compareTo(Item another) {

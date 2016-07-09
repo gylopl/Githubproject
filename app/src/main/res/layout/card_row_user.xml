@@ -36,8 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="Medium TexMedium TexMedium TexMedium TexMedium TexMedium Text"
             android:id="@+id/user_name"
+            android:layout_toRightOf="@+id/user_avatar"
             android:layout_below="@+id/user_name_header"
             android:layout_centerHorizontal="true" />
 

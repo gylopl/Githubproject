@@ -27,6 +27,8 @@ import makdroid.gitproject.adapters.RecyclerItemClickListener;
 import makdroid.gitproject.adapters.ResponseGithubAdapter;
 import makdroid.gitproject.model.GitHubResponse;
 import makdroid.gitproject.model.Item;
+import makdroid.gitproject.model.Repo;
+import makdroid.gitproject.model.User;
 import makdroid.gitproject.services.GithubService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        adapter = new ResponseGithubAdapter(new ArrayList<Item>(), getApplicationContext());
+        adapter = new ResponseGithubAdapter(new ArrayList<Item>());
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -109,37 +111,37 @@ public class MainActivity extends AppCompatActivity {
             adapter.clearItems();
         } else {
             showProgressBar();
-            Call<GitHubResponse> getRepos = githubService.getReposByName(query);
-            getRepos.enqueue(new Callback<GitHubResponse>() {
+            Call<GitHubResponse<Repo>> getRepos = githubService.getReposByName(query);
+            getRepos.enqueue(new Callback<GitHubResponse<Repo>>() {
                 @Override
-                public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
+                public void onResponse(Call<GitHubResponse<Repo>> call, Response<GitHubResponse<Repo>> response) {
                     onResponseGitHub(response);
                     Log.v("success Repo", response.message());
                 }
 
                 @Override
-                public void onFailure(Call<GitHubResponse> call, Throwable t) {
+                public void onFailure(Call<GitHubResponse<Repo>> call, Throwable t) {
                     Log.v("Error", t.getMessage());
                 }
             });
 
-            Call<GitHubResponse> getUsers = githubService.getUsersByName(query);
-            getUsers.enqueue(new Callback<GitHubResponse>() {
+            Call<GitHubResponse<User>> getUsers = githubService.getUsersByName(query);
+            getUsers.enqueue(new Callback<GitHubResponse<User>>() {
                 @Override
-                public void onResponse(Call<GitHubResponse> call, Response<GitHubResponse> response) {
+                public void onResponse(Call<GitHubResponse<User>> call, Response<GitHubResponse<User>> response) {
                     onResponseGitHub(response);
                     Log.v("success User", response.message());
                 }
 
                 @Override
-                public void onFailure(Call<GitHubResponse> call, Throwable t) {
+                public void onFailure(Call<GitHubResponse<User>> call, Throwable t) {
                     Log.v("Error", t.getMessage());
                 }
             });
         }
     }
 
-    private void onResponseGitHub(Response<GitHubResponse> response) {
+    private void onResponseGitHub(Response<? extends GitHubResponse<? extends Item>> response) {
         GitHubResponse jsonResponse = response.body();
         if (jsonResponse != null && jsonResponse.items != null)
             mItemListResponse.addAll(jsonResponse.items);
